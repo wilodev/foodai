@@ -1,7 +1,8 @@
 import useStore from "@/shared/store";
 
 export function useContent() {
-	const { dishes, setDishes, isLoading, setLoading } = useStore();
+	const { dishes, setDishes, isLoading, setLoading, setImage, imageBase64 } =
+		useStore();
 	const onSearchDish = async (image: File) => {
 		if (!image) {
 			alert("Por favor, sube una imagen primero.");
@@ -15,6 +16,7 @@ export function useContent() {
 			reader.readAsDataURL(image);
 			reader.onloadend = async () => {
 				const base64String = reader.result as string;
+				setImage(base64String);
 				// Upload image
 				const formData = new FormData();
 				formData.append("file", image);
@@ -42,7 +44,7 @@ export function useContent() {
 								...dish,
 								name: dish.name ?? dish.full_name,
 								preparationTime: dish.preparationTime,
-								imageUrl, // Agregar la URL de la imagen a cada plato
+								imageUrl: base64String,
 							}));
 							setDishes(updatedDishes);
 						} else {
@@ -62,5 +64,5 @@ export function useContent() {
 			setLoading(false);
 		}
 	};
-	return { isLoading, dishes, onSearchDish };
+	return { isLoading, dishes, onSearchDish, imageBase64 };
 }

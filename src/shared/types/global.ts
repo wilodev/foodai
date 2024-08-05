@@ -17,7 +17,9 @@ export interface IRecipeDetail {
 
 export interface IStoreState {
 	dishes: IRecipeDetail[];
+	imageBase64: string | undefined;
 	isLoading: boolean;
 	setDishes: (dishes: IRecipeDetail[]) => void;
 	setLoading: (isLoading: boolean) => void;
+	setImage: (imageBase64: string | undefined) => void;
 }

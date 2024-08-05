@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
-import path from "path";
 import fs from "fs";
 
 export const config = {
@@ -13,13 +12,7 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const uploadDir = path.join(process.cwd(), "public/uploads");
-	if (!fs.existsSync(uploadDir)) {
-		fs.mkdirSync(uploadDir, { recursive: true });
-	}
-
 	const form = formidable({
-		uploadDir,
 		keepExtensions: true,
 		maxFileSize: 3 * 1024 * 1024,
 		multiples: false,
@@ -39,9 +32,21 @@ export default async function handler(
 			return;
 		}
 
-		const filePath = file?.filepath;
-		const fileName = path.basename(filePath);
+		const filePath = file.filepath;
 
-		res.status(200).json({ imageUrl: `/uploads/${fileName}` });
+		fs.readFile(filePath, (readErr, data) => {
+			if (readErr) {
+				console.error("Error reading the file:", readErr);
+				res.status(500).json({ message: "Error reading file" });
+				return;
+			}
+
+			const base64Image = data.toString("base64");
+			const mimeType = file.mimetype;
+
+			res
+				.status(200)
+				.json({ base64Image: `data:${mimeType};base64,${base64Image}` });
+		});
 	});
 }

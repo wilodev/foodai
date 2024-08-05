@@ -66,7 +66,7 @@ export default async function handler(
 		const dishes: IRecipeDetail[] = jsonResponse.possible_dishes.map(
 			(dish: any) => ({
 				id: new Date().toString(), // Asume una función generateUniqueId para generar IDs únicos
-				imageUrl: "", // Puedes agregar la URL de la imagen si tienes una forma de almacenarla
+				imageUrl: "", // Puedes agregar la URL de la imagen si tienes una forma de almacenarla o ahora lo hacemos en un estado de zustand
 				name: dish.full_name,
 				description: "", // Si quieres agregar una descripción adicional
 				ingredients: dish.ingredients.map((ingredient: any) => ({
