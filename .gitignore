@@ -37,4 +37,5 @@ next-env.d.ts
 
 # assets upload
 /.next/static
-/public/uploads
+/public/uploads/*
+!/public/uploads/.gitignore
